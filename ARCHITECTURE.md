@@ -1,512 +1,299 @@
-# AutoQA Pro - Architecture & Design Document
+# AutoQA Pro – Architecture Simple Explanation
 
-## 🏛️ Framework Architecture
+## 📌 Framework Idea
 
-```
-┌─────────────────────────────────────────────────────────────────┐
-│                         TEST CLASSES                             │
-│  (LoginTest, ProductTest, CartTest, CheckoutTest, ValidationTest) │
-└────────────────────────┬────────────────────────────────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                      PAGE OBJECT CLASSES                         │
-│  (HomePage, LoginPage, ProductPage, CartPage, CheckoutPage)     │
-└────────────────────────┬────────────────────────────────────────┘
-                         │
-                         ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                   BASEPAGE (Common Utilities)                    │
-│  - waitForElement()                                              │
-│  - clickElement()                                                │
-│  - sendKeysToElement()                                           │
-│  - getElementText()                                              │
-│  - waitForElementToBeClickable()                                 │
-└────────────────────────┬────────────────────────────────────────┘
-                         │
-        ┌────────────────┼────────────────┬──────────────────┐
-        ▼                ▼                ▼                  ▼
-┌──────────────┐  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-│BaseTest      │  │ConfigReader  │  │ExtentManager │  │ScreenshotUtil│
-│- @Before     │  │- getProperty │  │- createTest  │  │- capture()   │
-│- @After      │  │- URL from    │  │- addLog      │  │- timestamp   │
-│- setup()     │  │  properties  │  │- flush()     │  │- save path   │
-│- teardown()  │  │              │  │              │  │              │
-└──────────────┘  └──────────────┘  └──────────────┘  └──────────────┘
-        │
-        ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                    WEBDRIVER & BROWSER                           │
-│  (Managed by WebDriverManager - Automatic Driver Setup)          │
-└─────────────────────────────────────────────────────────────────┘
-        │
-        ▼
-┌─────────────────────────────────────────────────────────────────┐
-│                     APPLICATION UNDER TEST                       │
-│               https://automationexercise.com                     │
-└─────────────────────────────────────────────────────────────────┘
-```
+Indha framework la main goal:
+
+* Clean code
+* Reusable code
+* Easy maintenance
+* Professional Selenium framework create panradhu
+
+Website:
+[Automation Exercise](https://automationexercise.com?utm_source=chatgpt.com)
 
 ---
 
-## 📦 Design Patterns Used
+# 🔹 Overall Flow
 
-### 1. Page Object Model (POM)
-Each page has a dedicated class containing:
-- **Locators**: Private `By` variables for each element
-- **Actions**: Public methods for user interactions
-- **Validations**: Methods to verify page state
-
-**Benefits:**
-- Easy maintenance - update locators in one place
-- Reusability - use same methods across tests
-- Readability - clear what each test does
-- Scalability - add new pages easily
-
-### 2. Base Class Pattern
-**BasePage**
-- Common waits and utilities
-- Reusable element interaction methods
-- Single place to update wait strategies
-
-**BaseTest**
-- Browser setup/teardown
-- Configuration reading
-- Report initialization
-
-**Benefits:**
-- DRY principle - no duplicate code
-- Consistent behavior across tests
-- Easy to update wait strategies
-- Centralized browser management
-
-### 3. Factory Pattern
-**WebDriverManager**
-- Automatically provides correct driver
-- No manual driver setup needed
-- Version compatibility handled
-
-### 4. Singleton Pattern
-**ExtentManager**
-- Single report instance
-- Centralized report management
-- Prevents multiple report generation
-
-### 5. Listener Pattern
-**TestListener (ITestListener)**
-- Listens to test events
-- Captures screenshots on failure
-- Logs to extent report
-- Tracks execution progress
-
----
-
-## 🔄 Execution Flow
-
-### Test Execution Sequence
-
-```
-1. TestNG reads testng.xml
+```text id="rk9v4v"
+Test Class
    ↓
-2. TestListener.onStart() - Initialize Extent Report
+Page Classes
    ↓
-3. For Each Test Method:
-   ├─ @BeforeMethod → BaseTest.setup()
-   │  ├─ Read browser from config.properties
-   │  ├─ Use WebDriverManager to setup driver
-   │  ├─ Maximize window
-   │  ├─ Navigate to baseUrl
-   │  └─ Create test in Extent Report
-   │
-   ├─ Test Execution
-   │  ├─ Create page object
-   │  ├─ Call page methods (no driver code in test)
-   │  └─ Perform assertions
-   │
-   ├─ TestListener.onTestSuccess() or onTestFailure()
-   │  ├─ If success → Log PASS to report
-   │  └─ If failure → Capture screenshot + Log FAIL + Add to report
-   │
-   └─ @AfterMethod → BaseTest.tearDown()
-      └─ driver.quit()
-   
-4. TestListener.onFinish() - Flush Extent Report
+BasePage Utilities
    ↓
-5. Report generated at: reports/ExtentReport.html
-   Screenshots saved at: screenshots/
+WebDriver
+   ↓
+Website
+```
+
+Simple ah sonna:
+
+* Test class la test logic irukum
+* Page class la elements + actions irukum
+* BasePage la common methods irukum
+
+---
+
+# 🔹 Main Classes
+
+## ✅ Test Classes
+
+Examples:
+
+* LoginTest
+* ProductTest
+* CartTest
+
+Idhula:
+
+* Test cases mattum irukum
+* Assertions irukum
+
+❌ findElement use panna koodadhu
+
+---
+
+## ✅ Page Classes
+
+Examples:
+
+* LoginPage
+* ProductPage
+* CartPage
+
+Idhula:
+
+* Locators
+* Click methods
+* SendKeys methods
+
+Example:
+
+```java id="9lk68m"
+loginButton.click();
 ```
 
 ---
 
-## 🎯 Wait Strategy
+## ✅ BasePage
 
-### No Thread.sleep()
+Common methods store pannuvom.
 
-**Instead, using WebDriverWait with ExpectedConditions:**
+Example:
 
-```java
-// ❌ BAD - Don't do this
-Thread.sleep(5000);
-element.click();
-
-// ✅ GOOD - Do this
-wait.until(ExpectedConditions.elementToBeClickable(element));
-element.click();
-
-// ✅ GOOD - Use BasePage method
-clickElement(element);  // Already has wait
+```java id="k9l6j7"
+waitForElement()
+clickElement()
+sendKeys()
 ```
 
-### Wait Types in BasePage
+Advantage:
 
-1. **Visibility Wait** - Element is displayed
-2. **Clickable Wait** - Element is enabled and visible
-3. **Presence Wait** - Element exists in DOM
-4. **Invisible Wait** - Element disappears
+* Duplicate code avoid
+* Reuse panna easy
 
 ---
 
-## 📊 Configuration Management
+## ✅ BaseTest
 
-### config.properties
+Browser open & close handle pannum.
 
+```java id="h9n2ok"
+@BeforeMethod
+→ browser open
+
+@AfterMethod
+→ browser close
 ```
-┌─────────────────────────────┐
-│   config.properties         │
-├─────────────────────────────┤
-│ browser=chrome              │
-│ baseUrl=...                 │
-│ implicitWait=10             │
-│ explicitWait=20             │
-│ headless=false              │
-└────────┬────────────────────┘
-         │
-         ▼
-┌─────────────────────────────┐
-│    ConfigReader.java        │
-├─────────────────────────────┤
-│ - Load properties on static │
-│ - getProperty(key)          │
-│ - getIntProperty(key)       │
-│ - getBooleanProperty(key)   │
-└────────┬────────────────────┘
-         │
-         ▼
-┌─────────────────────────────┐
-│   Used Throughout Code      │
-├─────────────────────────────┤
-│ - BaseTest                  │
-│ - ExtentManager             │
-│ - Any Test Class            │
-└─────────────────────────────┘
-```
-
-**Benefits:**
-- Easy environment switching
-- No hardcoded values
-- Centralized configuration
-- Quick adjustments
 
 ---
 
-## 📋 Test Data Management
+# 🔹 ConfigReader
 
-### testdata.json Structure
+File:
 
-```json
+```text id="pcxg8f"
+config.properties
+```
+
+Inside:
+
+```properties id="1ojfjw"
+browser=chrome
+baseUrl=https://automationexercise.com
+```
+
+Use:
+
+* Hardcoding avoid
+* Browser easy change panna mudiyum
+
+---
+
+# 🔹 JSON Data
+
+File:
+
+```text id="p4d7kw"
+testdata.json
+```
+
+Example:
+
+```json id="13y9h8"
 {
-  "validLogin": { "email": "...", "password": "..." },
-  "invalidLogin": { "email": "...", "password": "..." },
-  "registration": { "name": "...", "email": "..." },
-  "productSearch": { "keyword": "..." },
-  "checkout": { "name": "...", "cardNumber": "..." }
+ "email":"test@gmail.com"
 }
 ```
 
-### JsonDataReader Usage
+Use:
 
-```java
-// Single value
-String email = JsonDataReader.getValue("validLogin", "email");
+* Test data separate ah vechikalam
 
-// Full object
-JSONObject loginData = JsonDataReader.getTestData("validLogin");
+---
 
-// In DataProvider
-@DataProvider
-public Object[][] loginData() {
-    return new Object[][]{
-        {JsonDataReader.getValue("validLogin", "email"), ...}
-    };
-}
+# 🔹 WebDriverManager
+
+```java id="c7mlv9"
+WebDriverManager.chromedriver().setup();
+```
+
+Use:
+
+* Driver manually download panna theva illa
+
+---
+
+# 🔹 Wait Strategy
+
+❌ Wrong:
+
+```java id="cmx3ll"
+Thread.sleep(3000);
+```
+
+✅ Correct:
+
+```java id="pq0j54"
+WebDriverWait
+```
+
+Reason:
+
+* Stable automation
+* Fast execution
+
+---
+
+# 🔹 Screenshot on Failure
+
+Test fail aana:
+
+* Screenshot automatically edukkum
+* `/screenshots/` la save aagum
+
+Example:
+
+```text id="e1m1gz"
+verifyLogin_20260508.png
 ```
 
 ---
 
-## 📸 Screenshot & Reporting
+# 🔹 Extent Report
 
-### Screenshot Capture Flow
+Test complete aana HTML report generate aagum.
 
-```
-Test Fails
-   ↓
-TestListener.onTestFailure() triggered
-   ↓
-Extract WebDriver from test instance
-   ↓
-ScreenshotUtil.captureScreenshot()
-   ├─ Generate timestamp
-   ├─ Use TakesScreenshot interface
-   ├─ Save to /screenshots/ folder
-   └─ Return path
-   ↓
-Add to Extent Report with path
-   ↓
-Report displays screenshot in HTML
+Location:
+
+```text id="sqx70z"
+/reports/ExtentReport.html
 ```
 
-### Report Generation
+Contains:
 
-```
-ExtentManager.getInstance()
-   ├─ Initialize ExtentReports
-   ├─ Configure ExtentSparkReporter
-   └─ Set system info
-         ↓
-ExtentManager.createTest()
-   ├─ Create test node
-   └─ Return ExtentTest
-         ↓
-During Test:
-   ├─ Test passes → ExtentTest.log(Status.PASS)
-   ├─ Test fails → ExtentTest.log(Status.FAIL)
-   ├─ Screenshot → ExtentTest.addScreenCaptureFromPath()
-   └─ Exception → ExtentTest.log(Status.FAIL, throwable)
-         ↓
-ExtentManager.flushReport()
-   └─ Generate reports/ExtentReport.html
+* Pass
+* Fail
+* Screenshot
+* Error details
+
+---
+
+# 🔹 Execution Flow
+
+```text id="t7p26q"
+1. Read config file
+2. Open browser
+3. Open website
+4. Run tests
+5. If fail → screenshot
+6. Generate report
+7. Close browser
 ```
 
 ---
 
-## 🧪 Test Structure
+# 🔹 POM (Page Object Model)
 
-### Test Class Hierarchy
+Every page ku separate class.
 
-```
-BaseTest (abstract setup/teardown)
-   ↑
-   └─ Implemented by:
-       ├─ LoginTest extends BaseTest
-       ├─ ProductTest extends BaseTest
-       ├─ CartTest extends BaseTest
-       ├─ CheckoutTest extends BaseTest
-       └─ ValidationTest extends BaseTest
+Example:
+
+```text id="wte18w"
+LoginPage.java
+CartPage.java
+ProductPage.java
 ```
 
-### Test Method Structure
-
-```java
-@Test(priority = 1)
-public void testName() {
-    // 1. Create page object
-    HomePage homePage = new HomePage(driver);
-    
-    // 2. Call page methods (no locators here)
-    homePage.clickLoginLink();
-    
-    // 3. Perform assertions
-    Assert.assertTrue(condition, "Message");
-    
-    // 4. No driver code - all in page class
-}
-```
-
----
-
-## 🔒 Best Practices Enforced
-
-### ✅ POM Strictly Followed
-```
-✓ No findElement() in test classes
-✓ No locators hardcoded in tests
-✓ All locators in page classes
-✓ Reusable page methods
-```
-
-### ✅ No Thread.sleep()
-```
-✓ WebDriverWait everywhere
-✓ ExpectedConditions used
-✓ BasePage methods include waits
-✓ Explicit timeouts configurable
-```
-
-### ✅ Configuration Management
-```
-✓ No hardcoded URLs
-✓ No hardcoded credentials
-✓ Browser name from config.properties
-✓ All config in one place
-```
-
-### ✅ Error Handling
-```
-✓ Try-catch for optional elements
-✓ Proper exception logging
-✓ Screenshot on failure
-✓ Meaningful error messages
-```
-
-### ✅ Code Quality
-```
-✓ Meaningful variable names
-✓ Clear method names
-✓ Single responsibility principle
-✓ DRY - no code duplication
-✓ Comprehensive documentation
-```
-
----
-
-## 🚀 Scalability
-
-### Adding New Pages
-
-```java
-// 1. Create new page class extending BasePage
-public class NewPage extends BasePage {
-    // 2. Define locators
-    private By element = By.id("elementId");
-    
-    // 3. Add action methods
-    public void clickElement() {
-        clickElement(driver.findElement(element));
-    }
-}
-
-// 4. Use in tests
-NewPage page = new NewPage(driver);
-page.clickElement();
-```
-
-### Adding New Tests
-
-```java
-public class NewTest extends BaseTest {
-    @Test
-    public void newTestMethod() {
-        NewPage page = new NewPage(driver);
-        // Test logic
-    }
-}
-
-// Register in testng.xml
-<class name="tests.NewTest"/>
-```
-
-### Adding New Test Data
-
-```json
-{
-  "newData": {
-    "field1": "value1",
-    "field2": "value2"
-  }
-}
-```
-
----
-
-## 📈 Performance Considerations
-
-### Parallel Execution
-```xml
-<!-- In testng.xml -->
-<suite parallel="tests" thread-count="2">
-```
 Benefits:
-- Faster overall execution
-- Independent tests run in parallel
-- Optimal resource utilization
 
-### Wait Optimization
-```properties
-# Adjust based on application
-explicitWait=20  # Balance between speed and reliability
-```
+* Easy maintenance
+* Clean structure
+* Reusable methods
 
 ---
 
-## 🔍 Debugging Support
+# 🔹 TestNG Usage
 
-### Built-in Logging
+Use pannradhu:
 
-```java
-// In TestListener
-System.out.println("Test Started: " + result.getName());
-System.out.println("Test Failed: " + result.getName());
-System.out.println("Screenshot captured: " + path);
-```
-
-### Report Details
-
-```
-ExtentReport includes:
-- Test execution time
-- Pass/Fail status
-- Screenshots on failure
-- Exception stack trace
-- System information
-```
-
-### Screenshots for Analysis
-
-```
-/screenshots/TestName_timestamp.png
-Each failure has visual evidence
-```
+* @Test
+* @BeforeMethod
+* @AfterMethod
+* @DataProvider
+* Listeners
 
 ---
 
-## 🎓 Learning Resources
+# 🔹 Why This Framework Good?
 
-### Understanding Each Layer
+✅ Clean structure
 
-1. **Page Layer** - Understand locators and interactions
-2. **Test Layer** - Understand test logic
-3. **Base Layer** - Understand common utilities
-4. **Utility Layer** - Understand helpers
-5. **Listener Layer** - Understand event tracking
+✅ Reusable code
 
-### Key Concepts
+✅ Easy debugging
 
-- **Locator Strategies** - ID, XPath, CSS Selector
-- **Wait Strategies** - Visibility, Clickability, Presence
-- **POM Pattern** - Separation of concerns
-- **TestNG** - Annotations, DataProviders, Listeners
-- **Extent Reports** - Report generation
-- **WebDriverManager** - Automatic driver setup
+✅ Easy report checking
+
+✅ Industry standard approach
+
+✅ Team work easy
 
 ---
 
-## 📌 Summary
+# 🔹 Final Summary
 
-The AutoQA Pro framework demonstrates:
+Indha framework la:
 
-✅ **Enterprise-grade design** - Following industry standards  
-✅ **Scalability** - Easy to add tests and pages  
-✅ **Maintainability** - Clear structure and documentation  
-✅ **Reliability** - Proper wait strategies and error handling  
-✅ **Reporting** - Comprehensive test reports with evidence  
-✅ **Best Practices** - POM, no Thread.sleep(), configuration management  
-✅ **Team Collaboration** - Well-organized, documentation, clear responsibilities  
+* Test logic separate
+* Page logic separate
+* Config separate
+* Reports separate
 
-This framework can be used as a template for any Selenium automation project.
+So project:
 
----
-
-**Framework Version:** 1.0  
-**Created:** May 8, 2026  
-**Framework Type:** Selenium + TestNG + ExtentReports  
-**Support:** Fully documented and maintained
+* Professional ah irukum
+* Easy maintain panna mudiyum
+* Hackathon ku perfect ah irukum 🎯
