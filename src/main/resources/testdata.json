@@ -1,0 +1,29 @@
+{
+  "validLogin": {
+    "email": "testuser@gmail.com",
+    "password": "Test@123"
+  },
+
+  "invalidLogin": {
+    "email": "wronguser@gmail.com",
+    "password": "Wrong@123"
+  },
+
+  "registration": {
+    "name": "Automation User",
+    "email": "newuser123@gmail.com",
+    "password": "Pass@123"
+  },
+
+  "productSearch": {
+    "keyword": "Blue Top"
+  },
+
+  "checkout": {
+    "name": "Automation User",
+    "cardNumber": "4111111111111111",
+    "cvc": "123",
+    "month": "10",
+    "year": "2028"
+  }
+}

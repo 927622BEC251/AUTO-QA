@@ -1,0 +1,50 @@
+{
+  "java.configuration.updateBuildConfiguration": "automatic",
+  "java.project.sourcePaths": ["src/main/java", "src/test/java"],
+  "java.project.outputPath": "target/classes",
+  "java.import.gradle.enabled": false,
+  "editor.formatOnSave": true,
+  "editor.formatOnPaste": true,
+  "editor.defaultFormatter": "redhat.java",
+  "[java]": {
+    "editor.defaultFormatter": "redhat.java",
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.fixAll": "explicit"
+    }
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.suggest.showStatusBar": true,
+  "editor.inlineSuggest.enabled": true,
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/target": true,
+    "**/.git": true,
+    "**/.classpath": true,
+    "**/.project": true,
+    "**/.settings": true
+  },
+  "files.exclude": {
+    "**/.classpath": true,
+    "**/.project": true,
+    "**/.settings": true,
+    "**/.factorypath": true,
+    "**/target": false
+  },
+  "files.watcherExclude": {
+    "**/target/**": true,
+    "**/.git/**": true
+  },
+  "maven.executable.path": "mvn",
+  "maven.view": "hierarchical",
+  "maven.pomfile.autoUpdateEffectivePOM": true,
+  "terminal.integrated.defaultProfile.windows": "PowerShell",
+  "terminal.integrated.defaultProfile.osx": "zsh",
+  "terminal.integrated.defaultProfile.linux": "bash",
+  "terminal.integrated.fontSize": 12,
+  "extensions.ignoreRecommendations": false,
+  "git.ignoreLimitWarning": true,
+  "diffEditor.ignoreTrimWhitespace": false
+}

@@ -1,0 +1,13 @@
+[
+  "redhat.java",
+  "vscjava.vscode-maven",
+  "vscjava.vscode-java-test",
+  "vscjava.vscode-java-dependency",
+  "ms-vscode.extension-pack-for-java",
+  "eamodio.gitlens",
+  "github.copilot",
+  "ms-vscode.makefile-tools",
+  "ms-vscode.powershell",
+  "ms-vscode-remote.remote-containers",
+  "ms-vscode-remote.remote-ssh"
+]

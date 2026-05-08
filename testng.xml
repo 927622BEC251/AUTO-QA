@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE suite SYSTEM "https://testng.org/testng-1.0.dtd">
+
+<suite name="AutoQAProSuite" parallel="tests" thread-count="2">
+
+    <listeners>
+        <listener class-name="listeners.TestListener"/>
+    </listeners>
+
+    <test name="AuthenticationTests">
+        <classes>
+            <class name="tests.LoginTest"/>
+        </classes>
+    </test>
+
+    <test name="ProductTests">
+        <classes>
+            <class name="tests.ProductTest"/>
+        </classes>
+    </test>
+
+    <test name="CartTests">
+        <classes>
+            <class name="tests.CartTest"/>
+        </classes>
+    </test>
+
+    <test name="CheckoutTests">
+        <classes>
+            <class name="tests.CheckoutTest"/>
+        </classes>
+    </test>
+
+    <test name="ValidationTests">
+        <classes>
+            <class name="tests.ValidationTest"/>
+        </classes>
+    </test>
+
+</suite>

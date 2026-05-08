@@ -1,0 +1,22 @@
+[user]
+    name = AutoQA Pro Team
+    email = team@autoqa.pro
+
+[core]
+    safecrlf = true
+    autocrlf = input
+
+[pull]
+    rebase = true
+
+[fetch]
+    prune = true
+
+[status]
+    showUntrackedFiles = all
+
+[diff]
+    colorMoved = zebra
+
+[log]
+    decorate = short

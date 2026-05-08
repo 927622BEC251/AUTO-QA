@@ -1,0 +1,32 @@
+# Git Attributes
+* text=auto
+
+# Java
+*.java text eol=lf
+*.class binary
+*.jar binary
+
+# Maven
+pom.xml text eol=lf
+
+# XML/JSON
+*.xml text eol=lf
+*.json text eol=lf
+*.yaml text eol=lf
+*.yml text eol=lf
+
+# Markdown
+*.md text eol=lf
+
+# Properties
+*.properties text eol=lf
+
+# Build outputs
+target/ export-ignore
+reports/ export-ignore
+screenshots/ export-ignore
+
+# IDE
+.idea/ export-ignore
+.vscode/ export-ignore
+*.iml export-ignore

@@ -1,0 +1,31 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Debug AutoQA Pro Tests",
+      "type": "java",
+      "request": "launch",
+      "mainClass": "",
+      "projectName": "AutoQAPro",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "preLaunchTask": "maven: clean",
+      "env": {
+        "MAVEN_OPTS": "-Xmx1024m",
+        "JAVA_TOOL_OPTIONS": "-Dfile.encoding=UTF-8"
+      },
+      "args": []
+    },
+    {
+      "name": "Debug Single Test",
+      "type": "java",
+      "request": "launch",
+      "mainClass": "",
+      "projectName": "AutoQAPro",
+      "cwd": "${workspaceFolder}",
+      "console": "integratedTerminal",
+      "args": ["-Dtest=LoginTest"]
+    }
+  ],
+  "compounds": []
+}

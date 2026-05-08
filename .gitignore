@@ -1,0 +1,27 @@
+# IDE and Build Tools
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+target/
+*.class
+*.jar
+*.war
+
+# OS Files
+.DS_Store
+Thumbs.db
+.gitignore
+
+# Test Reports and Screenshots
+reports/
+screenshots/
+
+# Maven
+.m2/
+*.log
+
+# Environment
+.env
+.env.local
